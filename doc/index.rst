@@ -25,7 +25,7 @@ When working with time-based data, use SlidingTimePaginator
     from myapp.models import Model
     
     objs = Model.objects.all()
-    paginator = SlidingPaginator(objs, on_page=20, time_attibute="date")
+    paginator = SlidingTimePaginator(objs, on_page=20, time_attibute="date")
 
 
 Render form using

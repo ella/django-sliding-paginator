@@ -18,11 +18,9 @@ TEMPLATE_LOADERS = (
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
 )
 
-ROOT_URLCONF = 'djangobaselibrary.sample.urls'
+ROOT_URLCONF = 'unit_projecturls'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
@@ -37,13 +35,9 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 INSTALLED_APPS = (
-    'djangobaselibrary.sample',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
+    'djangoslidingpaginator',
+    'myapp',
     'django.contrib.sites',
-    'django.contrib.redirects',
-    'django.contrib.admin',
 )
 
 DEFAULT_PAGE_ID = 1
