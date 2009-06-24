@@ -1,1 +1,3 @@
-documentation for djangobaselibrary
+django-sliding-library is a simple library for creating "sliding" pagination on your sites.
+
+See doc for more details
