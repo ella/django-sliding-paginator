@@ -38,3 +38,4 @@ class TestProperSlicing(DatabaseTestCase):
         self.assert_comments_equals(self.comments[1:11], self.paginator.get_objects(
             anchor = self.comments[1].date
         ))
+
