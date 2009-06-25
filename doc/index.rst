@@ -23,13 +23,13 @@ When working with time-based data, use SlidingTimePaginator
 
     from djangoslidingpaginator import SlidingTimePaginator
     from myapp.models import Model
-    
+
     objs = Model.objects.all()
-    paginator = SlidingTimePaginator(objs, on_page=20, time_attibute="date")
+    paginator = SlidingTimePaginator(objs, on_page=20)
 
 
 Render form using
-    
+
     {% sliding_paginator from=50 on_page=20 %}
 
 

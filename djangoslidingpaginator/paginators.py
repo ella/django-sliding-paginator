@@ -9,13 +9,13 @@ from djangoslidingpaginator.forms import PaginationForm
 DEFAULT_ON_PAGE = 10
 
 class SlidingTimePaginator(object):
-    def __init__(self, queryset, on_page=DEFAULT_ON_PAGE, time_attribute="pk",
+    def __init__(self, queryset, on_page=DEFAULT_ON_PAGE, sort_attribute="pk",
         anchor=None, descending=True, view_name=None):
         super(SlidingTimePaginator, self).__init__()
 
         self.queryset = queryset
         self.on_page = on_page
-        self.time_attribute = time_attribute
+        self.sort_attribute = sort_attribute
         self.anchor = anchor
         self.view_name = view_name
         if descending:
@@ -26,7 +26,7 @@ class SlidingTimePaginator(object):
     def get_objects(self):
         if self.anchor:
             self.queryset = self.queryset.filter(**{
-                self.time_attribute+"__"+self.sort : self.anchor
+                self.sort_attribute+"__"+self.sort : self.anchor
             })
         return self.queryset[0:self.on_page]
 
