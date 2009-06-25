@@ -1,8 +1,8 @@
 from django.http import HttpResponse
 
-def get_paginated_objects(request, on_site=None, anchor=None):
+def get_paginated_objects(request, on_page=None, anchor=None):
 
     return HttpResponse("""
-       on_site : %s
+       on_page : %s
        anchor : %s
-    """ % (str(on_site), str(anchor)))
+    """ % (str(on_page), str(anchor)))

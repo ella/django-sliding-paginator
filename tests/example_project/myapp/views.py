@@ -4,7 +4,7 @@ from djangoslidingpaginator.paginators import SlidingTimePaginator
 from myapp.models import Comment
 
 
-def get_paginated_objects(request):
+def get_paginated_objects(request, on_page=None, anchor=None):
     comments = Comment.objects.all().order_by('-date')
     paginator = SlidingTimePaginator(comments, on_page=10)
 
