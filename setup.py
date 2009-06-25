@@ -1,6 +1,4 @@
 from setuptools import setup, find_packages
-import djangoslidingpagination
-
 
 VERSION = (0, 0, 1)
 __version__ = VERSION
