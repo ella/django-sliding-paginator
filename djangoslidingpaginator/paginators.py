@@ -12,7 +12,7 @@ from djangoslidingpaginator.forms import PaginationForm
 DEFAULT_ON_PAGE = 10
 
 class SlidingTimePaginator(object):
-    def __init__(self, queryset, on_page=DEFAULT_ON_PAGE, time_attribute="date",
+    def __init__(self, queryset, on_page=DEFAULT_ON_PAGE, time_attribute="pk",
         anchor=None, descending=True, view_name=None):
         super(SlidingTimePaginator, self).__init__()
 
@@ -38,13 +38,7 @@ class SlidingTimePaginator(object):
             self.on_page = int(post['on_page'])
 
         if post.has_key('anchor'):
-            # In python2.6, we'd use %f with strptime, but for backward compatibility, hack it
-            # this assumes no TZ portion, which should be fine for dateinfo returned from DB
-            dt, _, us= unquote_plus(post['anchor']).partition(".")
-            self.anchor = datetime.strptime(dt, "%Y-%m-%dT%H:%M:%S")
-            if us.rstrip("Z"):
-                us = int(us.rstrip("Z"), 10)
-                self.anchor = self.anchor + timedelta(microseconds=us)
+            self.anchor = int(post['anchor'])
 
 
     def get_form(self):
@@ -74,7 +68,7 @@ class SlidingTimePaginator(object):
             return reverse(
                 self.view_name,
                 kwargs = {
-                    "anchor" : urlquote_plus(self.anchor.isoformat()),
+                    "anchor" : urlquote_plus(unicode(self.anchor)),
                     "on_page" : self.on_page,
                 }
             )
