@@ -1,6 +1,3 @@
-from datetime import datetime, timedelta
-from urllib import unquote_plus
-
 from django.core.urlresolvers import reverse
 from django.template import TemplateDoesNotExist
 from django.template.loader import render_to_string
