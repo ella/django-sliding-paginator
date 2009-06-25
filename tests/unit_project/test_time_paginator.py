@@ -3,7 +3,7 @@ from datetime import datetime
 
 from djangosanetesting import DatabaseTestCase, UnitTestCase
 
-from djangoslidingpaginator.paginators import SlidingTimePaginator
+from djangoslidingpaginator.paginators import SlidingPkPaginator
 
 from myapp.models import Comment
 
@@ -46,15 +46,15 @@ class TestProperSlicing(DatabaseTestCase):
                 ))
 
     def test_default_slicing(self):
-        paginator = SlidingTimePaginator(Comment.objects.all().order_by('-pk'))
+        paginator = SlidingPkPaginator(Comment.objects.all().order_by('-pk'))
         self.assert_comments_equals(self.comments[0:10], paginator.get_objects())
 
     def test_custom_slicing(self):
-        paginator = SlidingTimePaginator(Comment.objects.all().order_by('-pk'), on_page=20)
+        paginator = SlidingPkPaginator(Comment.objects.all().order_by('-pk'), on_page=20)
         self.assert_comments_equals(self.comments[0:20], paginator.get_objects())
 
     def test_id_anchored_slicing(self):
-        paginator = SlidingTimePaginator(Comment.objects.all().order_by('-pk'),
+        paginator = SlidingPkPaginator(Comment.objects.all().order_by('-pk'),
             anchor = self.comments[1].pk
         )
         self.assert_comments_equals(self.comments[1:11], paginator.get_objects())
@@ -62,7 +62,7 @@ class TestProperSlicing(DatabaseTestCase):
 class TestFormAction(UnitTestCase):
     def setUp(self):
         super(TestFormAction, self).setUp()
-        self.paginator = SlidingTimePaginator([], anchor=1)
+        self.paginator = SlidingPkPaginator([], anchor=1)
 
     def test_default_action_is_current_page(self):
         self.assert_equals(".", self.paginator.form_action)

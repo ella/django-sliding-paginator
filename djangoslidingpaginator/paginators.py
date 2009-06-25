@@ -8,10 +8,10 @@ from djangoslidingpaginator.forms import PaginationForm
 
 DEFAULT_ON_PAGE = 10
 
-class SlidingTimePaginator(object):
+class SlidingPkPaginator(object):
     def __init__(self, queryset, on_page=DEFAULT_ON_PAGE, sort_attribute="pk",
         anchor=None, descending=True, view_name=None):
-        super(SlidingTimePaginator, self).__init__()
+        super(SlidingPkPaginator, self).__init__()
 
         self.queryset = queryset
         self.on_page = on_page
@@ -37,8 +37,7 @@ class SlidingTimePaginator(object):
         if post.has_key('anchor'):
             self.anchor = int(post['anchor'])
 
-
-    def get_form(self):
+    def get_form_buttons(self):
         form = PaginationForm({'on_page' : self.on_page})
         if not form.is_valid():
             form = PaginationForm({'on_page' : DEFAULT_ON_PAGE})
@@ -55,6 +54,12 @@ class SlidingTimePaginator(object):
                 <button value=">" name="pagination_forward" type="submit">&gt;</button>
                 <button value=">>" name="pagination_last" type="submit">&gt;&gt;</button>
             """ % str(form['on_page']))
+
+    def get_form(self):
+        return mark_safe("""<form action="%s" method="post">%s</form>""" % (
+            self.get_form_action(),
+            self.get_form_buttons()
+        ))
 
     form = property(fget=get_form)
 

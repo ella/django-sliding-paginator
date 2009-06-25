@@ -19,25 +19,25 @@ django-sliding-paginator supports combined approach: User can choose how many ob
 Usage
 ====================
 
-When working with time-based data, use SlidingTimePaginator
+When working data sortable by PK, use SlidingPkPaginator
 
-    from djangoslidingpaginator import SlidingTimePaginator
+    from djangoslidingpaginator import SlidingPkPaginator
     from myapp.models import Model
 
     objs = Model.objects.all()
-    paginator = SlidingTimePaginator(objs, on_page=20)
+    paginator = SlidingPkPaginator(objs, on_page=20)
 
 
-Render form using
+Render form content using
 
-    {% sliding_paginator from=50 on_page=20 %}
+    {% paginator.form %}
 
 
 ====================
 Inner workings
 ====================
 
-SlidingTimePaginator is used to display data that are changed frequently, to avoid "pages" concept alltogether to prevent data to slide under users hands[#fSliding]_. To anchor data, timestamp is thus used, assumed to be present on model object.
+SlidingPkPaginator is used to display data that are changed frequently, to avoid "pages" concept alltogether to prevent data to slide under users hands[#fSliding]_. To anchor data, timestamp is thus used, assumed to be present on model object.
 
 For dealing with non-time based data, SlidingObjectPaginator could be used, anchoring probably on object ID - if it would be implemented. If You're interested in using it, consider `forking us on github <http://github.com/ella/django-sliding-pagination/tree/master>`_ :-)
 

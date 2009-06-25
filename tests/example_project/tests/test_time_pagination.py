@@ -1,6 +1,6 @@
 from djangosanetesting import SeleniumTestCase
 
-from djangoslidingpaginator.paginators import SlidingTimePaginator
+from djangoslidingpaginator.paginators import SlidingPkPaginator
 
 from time import sleep
 from myapp.models import Comment
@@ -18,7 +18,7 @@ class TestPagination(SeleniumTestCase):
         ]
         # we want newest first
         self.comments.reverse()
-        self.paginator = SlidingTimePaginator(Comment.objects.all().order_by('-date'), on_page=10)
+        self.paginator = SlidingPkPaginator(Comment.objects.all().order_by('-date'), on_page=10)
 
         self.transaction.commit()
 
