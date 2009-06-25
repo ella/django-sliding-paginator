@@ -27,3 +27,4 @@ class TestPagination(SeleniumTestCase):
 
     def test_default_slicing(self):
         sleep(10)
+
