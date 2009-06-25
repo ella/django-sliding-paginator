@@ -20,12 +20,22 @@ class TestProperSlicing(DatabaseTestCase):
             )
         ]
 
-        fluff = [
-            Comment.objects.create(
+#        fluff = [
+#            Comment.objects.create(
+#                text = u"Comment %s" % i
+#            )
+#            for i in xrange(1, 50)
+#        ]
+        
+        fluff = []
+        from time import sleep
+        for i in xrange(1, 50):
+            # MySQL has microsecond problem, try this
+            sleep(0.01)
+            fluff.append(Comment.objects.create(
                 text = u"Comment %s" % i
-            )
-            for i in xrange(1, 50)
-        ]
+            ))
+
         
         last = [
             Comment.objects.create(
