@@ -1,6 +1,5 @@
 from urllib import unquote_plus
 from datetime import datetime
-from django.utils.http import urlquote_plus
 
 from djangosanetesting import DatabaseTestCase, UnitTestCase
 
@@ -47,15 +46,15 @@ class TestProperSlicing(DatabaseTestCase):
                 ))
 
     def test_default_slicing(self):
-        paginator = SlidingTimePaginator(Comment.objects.all().order_by('-date'))
+        paginator = SlidingTimePaginator(Comment.objects.all().order_by('-pk'))
         self.assert_comments_equals(self.comments[0:10], paginator.get_objects())
 
     def test_custom_slicing(self):
-        paginator = SlidingTimePaginator(Comment.objects.all().order_by('-date'), on_page=20)
+        paginator = SlidingTimePaginator(Comment.objects.all().order_by('-pk'), on_page=20)
         self.assert_comments_equals(self.comments[0:20], paginator.get_objects())
 
     def test_id_anchored_slicing(self):
-        paginator = SlidingTimePaginator(Comment.objects.all().order_by('-date'),
+        paginator = SlidingTimePaginator(Comment.objects.all().order_by('-pk'),
             anchor = self.comments[1].pk
         )
         self.assert_comments_equals(self.comments[1:11], paginator.get_objects())
