@@ -14,7 +14,7 @@ class TestPagination(SeleniumTestCase):
             Comment.objects.create(
                 text = u"Comment %s" % i
             )
-            for i in xrange(0, 150)
+            for i in xrange(0, 150+1)
         ]
         # we want newest first
         self.comments.reverse()
@@ -25,6 +25,10 @@ class TestPagination(SeleniumTestCase):
         self.selenium.open("/")
 
 
-    def test_default_slicing(self):
-        sleep(10)
+    def test_reverse_works(self):
+        self.assert_equals(u"Comment 150", self.selenium.get_text("//ul/li[position()=1]"))
+
+    def test_default_slicing_range(self):
+        self.assert_equals(10, int(self.selenium.get_xpath_count("//ul/li")))
+        self.assert_equals(u"Comment 141", self.selenium.get_text("//ul/li[position()=10]"))
 

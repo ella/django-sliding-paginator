@@ -9,6 +9,6 @@ def get_paginated_objects(request):
     paginator = SlidingTimePaginator(comments, on_page=10)
 
     return direct_to_template(request, "comments.html", {
-        'comments' : comments,
+        'comments' : paginator.get_objects(),
         'paginator' : paginator,
     })
