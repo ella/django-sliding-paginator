@@ -1,6 +1,3 @@
-from datetime import datetime, timedelta
-from urllib import unquote_plus
-
 from django.core.urlresolvers import reverse
 from django.template import TemplateDoesNotExist
 from django.template.loader import render_to_string
@@ -11,14 +8,14 @@ from djangoslidingpaginator.forms import PaginationForm
 
 DEFAULT_ON_PAGE = 10
 
-class SlidingTimePaginator(object):
-    def __init__(self, queryset, on_page=DEFAULT_ON_PAGE, time_attribute="date",
+class SlidingPkPaginator(object):
+    def __init__(self, queryset, on_page=DEFAULT_ON_PAGE, sort_attribute="pk",
         anchor=None, descending=True, view_name=None):
-        super(SlidingTimePaginator, self).__init__()
+        super(SlidingPkPaginator, self).__init__()
 
         self.queryset = queryset
         self.on_page = on_page
-        self.time_attribute = time_attribute
+        self.sort_attribute = sort_attribute
         self.anchor = anchor
         self.view_name = view_name
         if descending:
@@ -29,7 +26,7 @@ class SlidingTimePaginator(object):
     def get_objects(self):
         if self.anchor:
             self.queryset = self.queryset.filter(**{
-                self.time_attribute+"__"+self.sort : self.anchor
+                self.sort_attribute+"__"+self.sort : self.anchor
             })
         return self.queryset[0:self.on_page]
 
@@ -38,16 +35,9 @@ class SlidingTimePaginator(object):
             self.on_page = int(post['on_page'])
 
         if post.has_key('anchor'):
-            # In python2.6, we'd use %f with strptime, but for backward compatibility, hack it
-            # this assumes no TZ portion, which should be fine for dateinfo returned from DB
-            dt, _, us= unquote_plus(post['anchor']).partition(".")
-            self.anchor = datetime.strptime(dt, "%Y-%m-%dT%H:%M:%S")
-            if us.rstrip("Z"):
-                us = int(us.rstrip("Z"), 10)
-                self.anchor = self.anchor + timedelta(microseconds=us)
+            self.anchor = int(post['anchor'])
 
-
-    def get_form(self):
+    def get_form_buttons(self):
         form = PaginationForm({'on_page' : self.on_page})
         if not form.is_valid():
             form = PaginationForm({'on_page' : DEFAULT_ON_PAGE})
@@ -65,6 +55,12 @@ class SlidingTimePaginator(object):
                 <button value=">>" name="pagination_last" type="submit">&gt;&gt;</button>
             """ % str(form['on_page']))
 
+    def get_form(self):
+        return mark_safe("""<form action="%s" method="post">%s</form>""" % (
+            self.get_form_action(),
+            self.get_form_buttons()
+        ))
+
     form = property(fget=get_form)
 
     def get_form_action(self):
@@ -74,7 +70,7 @@ class SlidingTimePaginator(object):
             return reverse(
                 self.view_name,
                 kwargs = {
-                    "anchor" : urlquote_plus(self.anchor.isoformat()),
+                    "anchor" : urlquote_plus(unicode(self.anchor)),
                     "on_page" : self.on_page,
                 }
             )

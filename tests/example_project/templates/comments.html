@@ -6,9 +6,7 @@
   </head>
   <body>
     <h1>Object test</h1>
-    <form action="{{ paginator.form_action }}" method="post">
-        {{ paginator.form }}
-    </form>
+    {{ paginator.form }}
     <ul>
     {% for comment in comments %}
         <li>{{ comment.text }}</li>

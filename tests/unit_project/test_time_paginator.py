@@ -1,10 +1,9 @@
 from urllib import unquote_plus
 from datetime import datetime
-from django.utils.http import urlquote_plus
 
 from djangosanetesting import DatabaseTestCase, UnitTestCase
 
-from djangoslidingpaginator.paginators import SlidingTimePaginator
+from djangoslidingpaginator.paginators import SlidingPkPaginator
 
 from myapp.models import Comment
 
@@ -47,43 +46,35 @@ class TestProperSlicing(DatabaseTestCase):
                 ))
 
     def test_default_slicing(self):
-        paginator = SlidingTimePaginator(Comment.objects.all().order_by('-date'))
+        paginator = SlidingPkPaginator(Comment.objects.all().order_by('-pk'))
         self.assert_comments_equals(self.comments[0:10], paginator.get_objects())
 
     def test_custom_slicing(self):
-        paginator = SlidingTimePaginator(Comment.objects.all().order_by('-date'), on_page=20)
+        paginator = SlidingPkPaginator(Comment.objects.all().order_by('-pk'), on_page=20)
         self.assert_comments_equals(self.comments[0:20], paginator.get_objects())
 
-    def test_time_anchored_slicing(self):
-        paginator = SlidingTimePaginator(Comment.objects.all().order_by('-date'),
-            anchor = self.comments[1].date
+    def test_id_anchored_slicing(self):
+        paginator = SlidingPkPaginator(Comment.objects.all().order_by('-pk'),
+            anchor = self.comments[1].pk
         )
         self.assert_comments_equals(self.comments[1:11], paginator.get_objects())
 
 class TestFormAction(UnitTestCase):
     def setUp(self):
         super(TestFormAction, self).setUp()
-        self.paginator = SlidingTimePaginator([], anchor=datetime(year=2000, month=1, day=1, hour=1, minute=1))
+        self.paginator = SlidingPkPaginator([], anchor=1)
 
     def test_default_action_is_current_page(self):
         self.assert_equals(".", self.paginator.form_action)
 
     def test_paginator_with_reverse_lookup(self):
         self.paginator.view_name = "myapp-objects"
-        self.assert_equals("/2000-01-01T01:01:00/10/", unquote_plus(self.paginator.form_action))
+        self.assert_equals("/1/10/", unquote_plus(self.paginator.form_action))
 
     def test_post_parsing_anchor(self):
-        dt = datetime(year=2000, month=1, day=1, hour=1, minute=1)
         self.paginator.parse_post({
-                'anchor' : urlquote_plus(dt.isoformat()),
+                'anchor' : 1,
             }
         )
-        self.assert_equals(dt, self.paginator.anchor)
+        self.assert_equals(1, self.paginator.anchor)
         
-    def test_post_parsing_anchor_with_microseconds(self):
-        dt = datetime(year=2000, month=1, day=1, hour=1, minute=1, second=1, microsecond=2)
-        self.paginator.parse_post({
-                'anchor' : urlquote_plus(dt.isoformat()),
-            }
-        )
-        self.assert_equals(dt, self.paginator.anchor)
